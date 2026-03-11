@@ -1,69 +1,23 @@
-:root {
-    --red: #a30000;
-    --paper: #c2b280;
-    --ink: #1a1a1a;
+/* Убедимся, что скрытые элементы реально скрыты */
+.hidden {
+    display: none !important;
 }
 
-body {
-    background: #050505;
-    color: var(--paper);
-    font-family: 'Courier New', monospace;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    overflow: hidden;
-}
-
-.scene {
-    display: none;
-    max-width: 600px;
-    text-align: center;
-    animation: fadeIn 1s ease-in-out;
-}
-
-.scene.active { display: block; }
-
-.folder {
-    border: 2px solid var(--paper);
-    padding: 40px;
-    background: rgba(20, 20, 20, 0.9);
-    box-shadow: 0 0 20px rgba(163, 0, 0, 0.2);
-}
-
-.typewriter {
-    overflow: hidden;
-    white-space: pre-wrap;
-    margin: 20px 0;
-}
-
-button {
-    background: var(--red);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    font-weight: bold;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: 0.3s;
-}
-
-button:hover { background: #ff0000; transform: translateY(-3px); }
-
-.hidden { display: none; }
-
-.clue-item { cursor: pointer; transition: 0.5s; margin: 20px; }
-.clue-item:hover { filter: drop-shadow(0 0 10px gold); }
-
+/* Модальное окно должно быть скрыто при старте */
 .modal {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9);
-    display: flex;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    display: none; /* Важно: именно none */
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 9999;
 }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* Показываем модалку только когда убираем hidden */
+.modal:not(.hidden) {
+    display: flex;
+}
