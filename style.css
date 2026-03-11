@@ -1,0 +1,92 @@
+:root {
+    --bg-color: #0d0d0d;
+    --accent-red: #8b0000;
+    --accent-gold: #d4af37;
+    --text-color: #e0e0e0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    padding: 20px;
+    background-image: url('https://www.transparenttextures.com/patterns/dark-leather.png');
+}
+
+header {
+    text-align: center;
+    border-bottom: 2px solid var(--accent-red);
+    margin-bottom: 30px;
+}
+
+h1 { color: var(--accent-red); letter-spacing: 5px; }
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+button {
+    background: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: 10px 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover, button.active {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+}
+
+.evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-left: 4px solid var(--accent-gold);
+    transition: transform 0.3s;
+}
+
+.card:hover { transform: scale(1.05); background: rgba(255, 255, 255, 0.1); }
+
+/* Интерактивная пуговица */
+.clue-inspection {
+    margin-top: 50px;
+    text-align: center;
+    border-top: 1px solid #333;
+    padding-top: 30px;
+}
+
+.button-xray {
+    width: 80px;
+    height: 80px;
+    background: #333;
+    border-radius: 50%;
+    margin: 20px auto;
+    position: relative;
+    border: 4px solid #1a1a1a;
+    overflow: hidden;
+    cursor: crosshair;
+}
+
+.diamond-inside {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #fff 0%, #00ffff 50%, transparent 70%);
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.button-xray:hover .diamond-inside {
+    opacity: 1;
+    filter: blur(2px) contrast(150%);
+}
