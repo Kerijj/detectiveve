@@ -1,40 +1,49 @@
-const paths = {
-    false: {
-        title: "ПОДОЗРЕВАЕМЫЙ: АЛОН (ОХРАННИК)",
-        items: [
-            { name: "Пустой сейф-пакет", desc: "Найден в шкафчике. Серийный номер совпадает." },
-            { name: "Логи камер", desc: "Камера №4 была отключена на 30 секунд. Доступ был только у Алона." },
-            { name: "Долги", desc: "Выписка из банка: задолженность 200,000 шекелей." }
-        ]
-    },
-    real: {
-        title: "ПОДОЗРЕВАЕМЫЙ: ЭЛИ РАФАЭЛЬ (ИЛЛЮЗИОНИСТ)",
-        items: [
-            { name: "Стакан с налетом", desc: "Химический анализ выявил тальк и частицы латекса." },
-            { name: "Подставка для стакана", desc: "Скрытый механизм поворота дна. Ручная работа." },
-            { name: "Микро-царапины", desc: "Стекло обрезано на профессиональном ювелирном станке." }
-        ]
-    }
-};
+let currentChoice = "";
 
-function showPath(type) {
-    // Смена активной кнопки
-    document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`tab-${type}`).classList.add('active');
-
-    const data = paths[type];
-    document.getElementById('path-title').innerText = data.title;
-    
-    const grid = document.getElementById('evidence-grid');
-    grid.innerHTML = ''; // Очистка
-
-    data.items.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `<h3>${item.name}</h3><p>${item.desc}</p>`;
-        grid.appendChild(card);
-    });
+function nextScene(num) {
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+    document.getElementById(`scene-${num}`).classList.add('active');
 }
 
-// По умолчанию показываем ложный след
-showPath('false');
+function revealClue(id) {
+    document.getElementById('clue-detail-1').classList.remove('hidden');
+}
+
+function goPath(choice) {
+    currentChoice = choice;
+    const title = document.getElementById('suspect-title');
+    const card = document.getElementById('suspect-card');
+    
+    if (choice === 'alon') {
+        title.innerText = "ДОПРОС: АЛОН (ОХРАННИК)";
+        card.innerHTML = `
+            <p>Он нервничает. У него нашли пустые пакеты. Камеры были выключены в его смену.</p>
+            <blockquote>"Я просто хотел покурить, клянусь!"</blockquote>
+        `;
+    } else {
+        title.innerText = "ДОПРОС: ЭЛИ РАФАЭЛЬ (ИЛЛЮЗИОНИСТ)";
+        card.innerHTML = `
+            <p>Он спокоен. Пьет чай. На его рубашке странные серые пуговицы. В его гараже найден ювелирный станок.</p>
+            <blockquote>"Мир — это большая сцена, детектив. А вы — лишь зритель в первом ряду."</blockquote>
+        `;
+    }
+    nextScene(3);
+}
+
+function finalVerdict() {
+    const modal = document.getElementById('modal');
+    const title = document.getElementById('result-title');
+    const text = document.getElementById('result-text');
+    
+    modal.classList.remove('hidden');
+    
+    if (currentChoice === 'eli') {
+        title.innerText = "ДЕЛО РАСКРЫТО!";
+        title.style.color = "#00ff00";
+        text.innerText = "Вы заметили серые пуговицы. Это были крашеные алмазы! Эли Рафаэль признает поражение, но обещает вернуться с новым трюком.";
+    } else {
+        title.innerText = "ОШИБКА СЛЕДСТВИЯ";
+        title.style.color = "#ff0000";
+        text.innerText = "Алон был лишь мелким воришкой. Пока вы допрашивали его, Эли Рафаэль сел на рейс до Антверпена. Камни потеряны навсегда.";
+    }
+}
