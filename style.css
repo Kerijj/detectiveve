@@ -1,92 +1,69 @@
 :root {
-    --bg-color: #0d0d0d;
-    --accent-red: #8b0000;
-    --accent-gold: #d4af37;
-    --text-color: #e0e0e0;
+    --red: #a30000;
+    --paper: #c2b280;
+    --ink: #1a1a1a;
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: 'Courier New', Courier, monospace;
-    margin: 0;
-    padding: 20px;
-    background-image: url('https://www.transparenttextures.com/patterns/dark-leather.png');
-}
-
-header {
-    text-align: center;
-    border-bottom: 2px solid var(--accent-red);
-    margin-bottom: 30px;
-}
-
-h1 { color: var(--accent-red); letter-spacing: 5px; }
-
-.tabs {
+    background: #050505;
+    color: var(--paper);
+    font-family: 'Courier New', monospace;
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 30px;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.scene {
+    display: none;
+    max-width: 600px;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.scene.active { display: block; }
+
+.folder {
+    border: 2px solid var(--paper);
+    padding: 40px;
+    background: rgba(20, 20, 20, 0.9);
+    box-shadow: 0 0 20px rgba(163, 0, 0, 0.2);
+}
+
+.typewriter {
+    overflow: hidden;
+    white-space: pre-wrap;
+    margin: 20px 0;
 }
 
 button {
-    background: transparent;
-    border: 1px solid var(--text-color);
-    color: var(--text-color);
-    padding: 10px 25px;
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-weight: bold;
     cursor: pointer;
+    text-transform: uppercase;
     transition: 0.3s;
 }
 
-button:hover, button.active {
-    background: var(--accent-red);
-    border-color: var(--accent-red);
+button:hover { background: #ff0000; transform: translateY(-3px); }
+
+.hidden { display: none; }
+
+.clue-item { cursor: pointer; transition: 0.5s; margin: 20px; }
+.clue-item:hover { filter: drop-shadow(0 0 10px gold); }
+
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
 }
 
-.evidence-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.card {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    border-left: 4px solid var(--accent-gold);
-    transition: transform 0.3s;
-}
-
-.card:hover { transform: scale(1.05); background: rgba(255, 255, 255, 0.1); }
-
-/* Интерактивная пуговица */
-.clue-inspection {
-    margin-top: 50px;
-    text-align: center;
-    border-top: 1px solid #333;
-    padding-top: 30px;
-}
-
-.button-xray {
-    width: 80px;
-    height: 80px;
-    background: #333;
-    border-radius: 50%;
-    margin: 20px auto;
-    position: relative;
-    border: 4px solid #1a1a1a;
-    overflow: hidden;
-    cursor: crosshair;
-}
-
-.diamond-inside {
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, #fff 0%, #00ffff 50%, transparent 70%);
-    opacity: 0;
-    transition: 0.2s;
-}
-
-.button-xray:hover .diamond-inside {
-    opacity: 1;
-    filter: blur(2px) contrast(150%);
-}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
