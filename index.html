@@ -2,40 +2,50 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дело Эли Рафаэля | Алмазный Иллюзионист</title>
+    <title>CASE #77-B: THE ILLUSIONIST</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="overlay"></div>
-    
-    <header>
-        <h1>ДЕЛО №77-Б: АЛМАЗНЫЙ ИЛЛЮЗИОНИСТ</h1>
-        <p class="subtitle">Ограбление Алмазной биржи Рамат-Гана</p>
-    </header>
+    <div id="game-container">
+        <section id="scene-1" class="scene active">
+            <div class="folder">
+                <h1>ОПЕРАТИВНАЯ СВОДКА</h1>
+                <p class="typewriter">Рамат-Ган. 08:45 утра. Из хранилища Алмазной биржи исчезли 15 бриллиантов. Камеры чисты. Сейф закрыт. У нас есть 24 часа, пока камни не покинули страну.</p>
+                <button onclick="nextScene(2)">ПРИНЯТЬ ДЕЛО</button>
+            </div>
+        </section>
 
-    <main class="evidence-board">
-        <div class="tabs">
-            <button onclick="showPath('false')" id="tab-false">ЛОЖНЫЙ СЛЕД</button>
-            <button onclick="showPath('real')" id="tab-real">РЕАЛЬНЫЙ ПУТЬ</button>
+        <section id="scene-2" class="scene">
+            <h2>МЕСТО ПРЕСТУПЛЕНИЯ</h2>
+            <p>Вы осматриваете стол. Кажется, всё в порядке, но вы замечаете странный предмет...</p>
+            <div class="clue-item" onclick="revealClue('coaster')">
+                <img src="https://cdn-icons-png.flaticon.com/512/3100/3100566.png" width="100" alt="Подставка">
+                <p>[ Нажмите, чтобы осмотреть подставку ]</p>
+            </div>
+            <div id="clue-detail-1" class="detail hidden">
+                <p><strong>ОБНАРУЖЕНО:</strong> Двойное дно. Механизм срабатывает при нажатии. Куда это ведет?</p>
+                <div class="choices">
+                    <button onclick="goPath('alon')">СЛЕДИТЬ ЗА ОХРАНОЙ (АЛОН)</button>
+                    <button onclick="goPath('eli')">ИСКАТЬ МАСТЕРА (ЭЛИ РАФАЭЛЬ)</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="scene-3" class="scene">
+            <h2 id="suspect-title">ДОПРОС ПОДОЗРЕВАЕМОГО</h2>
+            <div id="suspect-card">
+                </div>
+            <button class="verdict-btn" onclick="finalVerdict()">ВЫНЕСТИ ПРИГОВОР</button>
+        </section>
+    </div>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="result-title"></h2>
+            <p id="result-text"></p>
+            <button onclick="location.reload()">НАЧАТЬ ЗАНОВО</button>
         </div>
-
-        <section id="content">
-            <div id="path-description">
-                <h2 id="path-title">Выберите направление следствия</h2>
-                <div class="evidence-grid" id="evidence-grid">
-                    </div>
-            </div>
-        </section>
-
-        <section class="clue-inspection">
-            <h3>ОСМОТР ВЕЩДОКА №14 (Рубашка подозреваемого)</h3>
-            <p>Наведите курсор на пуговицу, чтобы просветить её УФ-лучом</p>
-            <div class="button-xray">
-                <div class="diamond-inside"></div>
-            </div>
-        </section>
-    </main>
+    </div>
 
     <script src="script.js"></script>
 </body>
