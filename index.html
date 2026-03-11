@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дело Эли Рафаэля | Алмазный Иллюзионист</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="overlay"></div>
+    
+    <header>
+        <h1>ДЕЛО №77-Б: АЛМАЗНЫЙ ИЛЛЮЗИОНИСТ</h1>
+        <p class="subtitle">Ограбление Алмазной биржи Рамат-Гана</p>
+    </header>
+
+    <main class="evidence-board">
+        <div class="tabs">
+            <button onclick="showPath('false')" id="tab-false">ЛОЖНЫЙ СЛЕД</button>
+            <button onclick="showPath('real')" id="tab-real">РЕАЛЬНЫЙ ПУТЬ</button>
+        </div>
+
+        <section id="content">
+            <div id="path-description">
+                <h2 id="path-title">Выберите направление следствия</h2>
+                <div class="evidence-grid" id="evidence-grid">
+                    </div>
+            </div>
+        </section>
+
+        <section class="clue-inspection">
+            <h3>ОСМОТР ВЕЩДОКА №14 (Рубашка подозреваемого)</h3>
+            <p>Наведите курсор на пуговицу, чтобы просветить её УФ-лучом</p>
+            <div class="button-xray">
+                <div class="diamond-inside"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
