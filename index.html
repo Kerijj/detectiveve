@@ -1,52 +1,48 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>CASE #77-B: THE ILLUSIONIST</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="game-container">
-        <section id="scene-1" class="scene active">
-            <div class="folder">
-                <h1>ОПЕРАТИВНАЯ СВОДКА</h1>
-                <p class="typewriter">Рамат-Ган. 08:45 утра. Из хранилища Алмазной биржи исчезли 15 бриллиантов. Камеры чисты. Сейф закрыт. У нас есть 24 часа, пока камни не покинули страну.</p>
-                <button onclick="nextScene(2)">ПРИНЯТЬ ДЕЛО</button>
-            </div>
-        </section>
-
-        <section id="scene-2" class="scene">
-            <h2>МЕСТО ПРЕСТУПЛЕНИЯ</h2>
-            <p>Вы осматриваете стол. Кажется, всё в порядке, но вы замечаете странный предмет...</p>
-            <div class="clue-item" onclick="revealClue('coaster')">
-                <img src="https://cdn-icons-png.flaticon.com/512/3100/3100566.png" width="100" alt="Подставка">
-                <p>[ Нажмите, чтобы осмотреть подставку ]</p>
-            </div>
-            <div id="clue-detail-1" class="detail hidden">
-                <p><strong>ОБНАРУЖЕНО:</strong> Двойное дно. Механизм срабатывает при нажатии. Куда это ведет?</p>
-                <div class="choices">
-                    <button onclick="goPath('alon')">СЛЕДИТЬ ЗА ОХРАНОЙ (АЛОН)</button>
-                    <button onclick="goPath('eli')">ИСКАТЬ МАСТЕРА (ЭЛИ РАФАЭЛЬ)</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="scene-3" class="scene">
-            <h2 id="suspect-title">ДОПРОС ПОДОЗРЕВАЕМОГО</h2>
-            <div id="suspect-card">
-                </div>
-            <button class="verdict-btn" onclick="finalVerdict()">ВЫНЕСТИ ПРИГОВОР</button>
-        </section>
-    </div>
-
-    <div id="modal" class="modal hidden">
-        <div class="modal-content">
-            <h2 id="result-title"></h2>
-            <p id="result-text"></p>
-            <button onclick="location.reload()">НАЧАТЬ ЗАНОВО</button>
+<div id="game-container">
+    <section id="scene-1" class="scene active">
+        <div class="folder">
+            <h1>ДЕЛО #77-B</h1>
+            <p class="typewriter">В Алмазном квартале объявлено чрезвычайное положение. У вас есть карта мест, связанных с инцидентом. Соберите все факты, прежде чем вынести приговор.</p>
+            <button onclick="nextScene(2)">ОТКРЫТЬ КАРТУ</button>
         </div>
-    </div>
+    </section>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <section id="scene-2" class="scene">
+        <div class="investigation-layout">
+            <div class="map-grid">
+                <h2>КАРТА ОБЪЕКТОВ</h2>
+                <div class="grid-container">
+                    <div class="map-square" onclick="openLocation('office')">🏢 Кабинет Леви</div>
+                    <div class="map-square" onclick="openLocation('security')">🛡️ Пост охраны</div>
+                    <div class="map-square" onclick="openLocation('workshop')">⚙️ Мастерская</div>
+                    <div class="map-square" onclick="openLocation('airport')">✈️ Аэропорт</div>
+                </div>
+            </div>
+
+            <div class="dossier-list">
+                <h2>ДОСЬЕ</h2>
+                <div class="suspect-mini" onclick="showSuspect('wife')">👤 Сара Леви</div>
+                <div class="suspect-mini" onclick="showSuspect('alon')">👤 Алон (Охрана)</div>
+                <div class="suspect-mini" onclick="showSuspect('eli')">👤 Эли (Мастер)</div>
+            </div>
+        </div>
+
+        <div id="location-details" class="details-window hidden">
+            <h3 id="loc-title">Название локации</h3>
+            <p id="loc-desc">Описание и найденные улики...</p>
+            <div id="loc-clues"></div>
+            <button onclick="closeDetails()">ЗАКРЫТЬ</button>
+        </div>
+
+        <button id="final-decision-btn" class="hidden" onclick="nextScene(3)">ВЫНЕСТИ ПРИГОВОР</button>
+    </section>
+
+    <section id="scene-3" class="scene">
+        <h2>КОГО ВЫ ОБВИНЯЕТЕ?</h2>
+        <div class="final-choices">
+            <button onclick="confront('wife')">Сара Леви</button>
+            <button onclick="confront('alon')">Алон</button>
+            <button onclick="confront('eli')">Эли Рафаэль</button>
+        </div>
+    </section>
+</div>
