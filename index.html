@@ -2,152 +2,166 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Case #77-B: Noir Deep Investigation</title>
+    <title>Дело №77-Б: Паутина Лжи</title>
     <style>
-        body { background: #0a0a0a; color: #c2b280; font-family: 'Courier New', monospace; padding: 20px; display: flex; justify-content: center; line-height: 1.4; }
-        #case-file { max-width: 800px; border: 2px solid #c2b280; padding: 30px; background: #111; box-shadow: 0 0 30px #000; position: relative; }
+        body { background: #070707; color: #b5a478; font-family: 'Courier New', Courier, monospace; padding: 20px; display: flex; justify-content: center; }
+        #case-file { max-width: 900px; width: 100%; border: 1px solid #444; padding: 40px; background: #0f0f0f; box-shadow: 0 0 40px #000; position: relative; }
+        .case-header { text-align: center; border-bottom: 2px double #b5a478; margin-bottom: 20px; padding-bottom: 10px; }
         .hidden { display: none; }
-        .clue-box { background: #1a1a1a; padding: 15px; margin: 10px 0; border-left: 4px solid #d4af37; animation: fadeIn 0.5s; }
-        button { background: transparent; color: #c2b280; border: 1px solid #c2b280; padding: 10px 15px; cursor: pointer; margin: 5px 5px 0 0; font-size: 0.9em; }
-        button:hover { background: #c2b280; color: #000; }
-        button:disabled { opacity: 0.2; cursor: not-allowed; border-color: #444; }
-        .red { color: #a30000; border-color: #a30000; }
-        .gold { color: #d4af37; font-weight: bold; }
-        #inventory { margin-top: 20px; padding: 10px; border: 1px dashed #444; font-size: 0.8em; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .clue-box { background: #151515; padding: 15px; margin: 12px 0; border-left: 5px solid #635a41; border-right: 1px solid #333; animation: fadeIn 0.6s; }
+        
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        button { background: #1a1a1a; color: #b5a478; border: 1px solid #444; padding: 12px; cursor: pointer; transition: 0.3s; text-align: left; font-size: 0.85em; }
+        button:hover:not(:disabled) { background: #b5a478; color: #000; border-color: #fff; }
+        button:disabled { color: #333; border-color: #222; cursor: default; }
+
+        .red-btn { border-color: #631212; color: #a30000; font-weight: bold; }
+        .red-btn:hover { background: #631212 !important; color: #fff !important; }
+
+        #sidebar { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.85em; border-top: 1px solid #333; padding-top: 20px; }
+        .status-block { border: 1px solid #222; padding: 10px; background: #0a0a0a; }
+        .gold { color: #d4af37; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
+
 <div id="case-file">
-    <h1>ДЕЛО №77-Б: ТЕНЬ ИЛЛЮЗИИ</h1>
-    <div id="story">
-        <p><strong>ПРОТОКОЛ:</strong> Рамат-Ган. Алмазная биржа. Из сейфа Леви исчезли камни "Сердце пустыни".</p>
-        <p>Сейф был закрыт на цифровой код и физический ключ. Камеры зафиксировали лишь легкое мерцание света в 14:02.</p>
-    </div>
-    
-    <div id="inventory">УЛИКИ: <span id="clue-list">нет</span></div>
-    <hr>
-    
-    <div id="nav">
-        <p class="gold">ДОСТУПНЫЕ ДЕЙСТВИЯ:</p>
-        <button id="btn-office" onclick="go('office')">Осмотреть сейф</button>
-        <button id="btn-wife" class="hidden" onclick="go('wife')">Допросить Сару (Жену)</button>
-        <button id="btn-security" class="hidden" onclick="go('security')">Изучить комнату охраны</button>
-        <button id="btn-archive" class="hidden" onclick="go('archive')">Запрос в архив мастеров</button>
-        <button id="btn-workshop" class="hidden" onclick="go('workshop')">Обыск в мастерской</button>
-        <button id="btn-airport" class="hidden" onclick="go('airport')">Слежка в аэропорту</button>
+    <div class="case-header">
+        <p style="font-size: 0.7em; letter-spacing: 5px;">CONFIDENTIAL / EYES ONLY</p>
+        <h1>ПРОТОКОЛ РАССЛЕДОВАНИЯ №77-Б</h1>
     </div>
 
-    <div id="suspects" class="hidden">
-        <h3>ФИГУРАНТЫ:</h3>
-        <div id="s-list" style="font-size: 0.9em; color: #888;"></div>
+    <div id="story-log">
+        <p><strong>МЕСТО:</strong> Алмазная Биржа, Рамат-Ган.</p>
+        <p>Пропали 15 необработанных алмазов. Сейф открыт "чисто". Камеры зафиксировали помехи. На месте найдено: пустой стакан и запах дешевого табака.</p>
     </div>
 
-    <button id="verdict-btn" class="hidden red" onclick="showVerdict()" style="width: 100%; margin-top: 30px; font-weight: bold;">ВЫНЕСТИ ПРИГОВОР</button>
+    <div class="controls" id="nav-buttons">
+        <button id="btn-office" onclick="action('office')">📍 Осмотреть сейф и стол</button>
+        <button id="btn-cafe" class="hidden" onclick="action('cafe')">☕ Кафе "Биржа" (Опрос официантов)</button>
+        <button id="btn-wife" class="hidden" onclick="action('wife')">👤 Допрос Сары Леви</button>
+        <button id="btn-security" class="hidden" onclick="action('security')">🛡️ Пост охраны (Логи сервера)</button>
+        <button id="btn-warehouse" class="hidden" onclick="action('warehouse')">📦 Логистический склад</button>
+        <button id="btn-antique" class="hidden" onclick="action('antique')">🕯️ Антикварная лавка</button>
+        <button id="btn-workshop" class="hidden" onclick="action('workshop')">⚙️ Мастерская Эли Рафаэля</button>
+        <button id="btn-airport" class="hidden" onclick="action('airport')">✈️ Аэропорт: Финальный перехват</button>
+    </div>
+
+    <div id="sidebar">
+        <div class="status-block">
+            <p class="gold"><strong>УЛИКИ В ПАПКЕ:</strong></p>
+            <ul id="clue-list" style="padding-left: 20px;"><li>нет данных</li></ul>
+        </div>
+        <div class="status-block">
+            <p class="gold"><strong>ФИГУРАНТЫ (ДОСЬЕ):</strong></p>
+            <div id="suspect-list"><i>пусто</i></div>
+        </div>
+    </div>
+
+    <button id="verdict-btn" class="hidden red-btn" onclick="openVerdict()" style="width: 100%; margin-top: 20px; text-align: center;">ВЫНЕСТИ ОКОНЧАТЕЛЬНОЕ ОБВИНЕНИЕ</button>
 </div>
 
 <script>
-    const data = {
-        office: { 
-            text: "Сейф открыт без царапин. На дне вы находите тончайший слой талька и странную щель в подставке для воды. Кто-то использовал механическую ловушку.", 
-            clues: ["Механизм подмены", "Следы талька"],
-            suspects: ["Сара (Жена)", "Эли (Мастер)"], 
-            unlock: ["btn-wife", "btn-security"] 
+    const db = {
+        office: {
+            text: "В сейфе нет следов взлома. На дне — микроскопический белый порошок (тальк). На подставке для воды найден отпечаток пальца в перчатке. Кто-то явно имитировал небрежность.",
+            clues: ["Белый порошок (тальк)", "След перчатки"],
+            suspects: ["Сара (Жена)", "Эли (Мастер)"],
+            unlock: ["btn-cafe", "btn-wife"]
         },
-        wife: { 
-            text: "Сара плачет. Она признается, что у мужа были долги, и он недавно застраховал камни. Но она заметила, что из его коллекции исчез старый сценический реквизит — фальшивые алмазы.", 
-            clues: ["Страховой мотив", "Пропажа реквизита"],
-            suspects: [], 
-            unlock: ["btn-archive"] 
+        cafe: {
+            text: "Официант вспомнил: за час до кражи курьер Марк передал пакет охраннику Алону. Алон выглядел напуганным. В чеке из кафе — пометка 'за счет заведения для VIP-клиента'.",
+            clues: ["Пакет для охраны", "VIP-привилегия"],
+            suspects: ["Алон (Охрана)", "Марк (Курьер)"],
+            unlock: ["btn-security"]
         },
-        security: { 
-            text: "Охранник Алон утверждает, что пил кофе. Но в логах вы видите, что внешнее питание камер было обрезано ровно на 120 секунд. На полу найден обрывок квитанции из мастерской в Петах-Тикве.", 
-            clues: ["Отключение питания", "Квитанция из Петах-Тиквы"],
-            suspects: ["Алон (Охрана)"], 
-            unlock: ["btn-workshop"] 
+        wife: {
+            text: "Сара утверждает, что муж был банкротом. Она подсовывает вам письмо: Алон якобы угрожал ее мужу. Письмо пахнет тем же табаком, что был на месте кражи. Слишком очевидно?",
+            clues: ["Письмо с угрозами (Алон?)", "Запах табака"],
+            suspects: [],
+            unlock: ["btn-antique"]
         },
-        archive: { 
-            text: "Архив выдал справку: Эли Рафаэль — бывший фокусник, осужденный 10 лет назад за 'исчезновение' веса золотых слитков. Его специализация — работа со светом и лаками.", 
-            clues: ["Прошлое фокусника"],
-            suspects: [], 
-            unlock: ["btn-workshop"] 
+        security: {
+            text: "Алон клянется, что в пакете был сэндвич. Но логи показывают: камеры отключил не он, а удаленный доступ из 'Ювелирной лавки Ицхака'. Алон просто закрыл на это глаза.",
+            clues: ["Удаленный взлом камер", "Сговор Алона"],
+            suspects: ["Ицхак (Оценщик)"],
+            unlock: ["btn-warehouse"]
         },
-        workshop: { 
-            text: "В мастерской Эли пусто. Но в мусоре вы находите банку матового лака 'Grey Mist' и эскизы пуговиц. Масштаб 1:1 совпадает с размером украденных алмазов.", 
-            clues: ["Лак 'Grey Mist'", "Эскизы пуговиц"],
-            suspects: [], 
-            unlock: ["btn-airport"] 
+        warehouse: {
+            text: "На складе вы находите пустую коробку из-под серого лака и партию дешевых пуговиц. Марк (курьер) сознается: он возил заказы между Эли и Ицхаком, но не знал, что внутри.",
+            clues: ["Партия пуговиц", "Серый лак"],
+            suspects: [],
+            unlock: ["btn-workshop"]
         },
-        airport: { 
-            text: "Зал вылета. Эли спокоен. Он в сером пиджаке. Под УФ-лампой его пуговицы не поглощают свет, а горят ярко-синим. Это алмазы, закрашенные матовым лаком под обычный пластик!", 
+        antique: {
+            text: "Старый антиквар Ицхак нервничает. Вы находите у него поддельный ключ от сейфа Леви. Он говорит, что Сара заказала его месяц назад. Но ключ не подходит к замку — это пустышка для отвода глаз.",
+            clues: ["Ложный ключ (Сара?)", "Показания Ицхака"],
+            suspects: [],
+            unlock: ["btn-workshop"]
+        },
+        workshop: {
+            text: "В мастерской Эли вы находите самое важное: химический состав для снятия матового покрытия. Рядом — фото пиджака Эли с пометкой '15 пуговиц'. На столе рассыпан тот же тальк, что в сейфе.",
+            clues: ["Растворитель лака", "План пиджака"],
+            suspects: [],
+            unlock: ["btn-airport"]
+        },
+        airport: {
+            text: "Аэропорт. Все фигуранты здесь. Эли пытается пройти контроль. Его пиджак кажется обычным, но пуговицы под УФ-светом меняют цвет. Они закрашены серым лаком, чтобы скрыть блеск алмазов.",
             clues: ["Алмазные пуговицы"],
-            suspects: [], 
-            unlock: ["final"] 
+            unlock: ["final"]
         }
     };
 
-    let inventory = new Set();
-    let foundSuspects = new Set();
+    let state = { clues: new Set(), suspects: new Set(), visited: new Set() };
 
-    function go(id) {
-        const item = data[id];
-        
-        // Добавляем текст
+    function action(id) {
+        const node = db[id];
+        const log = document.getElementById('story-log');
         const box = document.createElement('div');
         box.className = 'clue-box';
-        box.innerHTML = `<strong>${id.toUpperCase()}:</strong> ${item.text}`;
-        document.getElementById('story').appendChild(box);
-        
-        // Улики
-        if (item.clues) {
-            item.clues.forEach(c => inventory.add(c));
-            updateInventory();
-        }
+        box.innerHTML = `<strong>ОТЧЕТ (${id.toUpperCase()}):</strong> ${node.text}`;
+        log.appendChild(box);
 
-        // Подозреваемые
-        item.suspects.forEach(s => foundSuspects.add(s));
-        renderSuspects();
+        node.clues.forEach(c => state.clues.add(c));
+        node.suspects.forEach(s => state.suspects.add(s));
 
-        // Разблокировка кнопок
-        if (item.unlock) {
-            if (item.unlock.includes("final")) {
+        updateSidebar();
+
+        if (node.unlock) {
+            if (node.unlock.includes("final")) {
                 document.getElementById('verdict-btn').classList.remove('hidden');
             } else {
-                item.unlock.forEach(btnId => {
-                    document.getElementById(btnId).classList.remove('hidden');
-                });
+                node.unlock.forEach(b => document.getElementById(b).classList.remove('hidden'));
             }
         }
 
-        // Деактивация кнопки
         document.getElementById(`btn-${id}`).disabled = true;
         window.scrollTo(0, document.body.scrollHeight);
     }
 
-    function updateInventory() {
-        document.getElementById('clue-list').innerText = Array.from(inventory).join(', ');
+    function updateSidebar() {
+        const cList = document.getElementById('clue-list');
+        cList.innerHTML = Array.from(state.clues).map(c => `<li>${c}</li>`).join('');
+
+        const sList = document.getElementById('suspect-list');
+        sList.innerHTML = Array.from(state.suspects).map(s => `• ${s}`).join('<br>');
     }
 
-    function renderSuspects() {
-        document.getElementById('suspects').classList.remove('hidden');
-        document.getElementById('s-list').innerHTML = Array.from(foundSuspects).map(s => `• ${s}`).join('<br>');
-    }
+    function openVerdict() {
+        const suspectList = Array.from(state.suspects).join(", ");
+        const final = prompt(`КТО ГЛАВНЫЙ ОРГАНИЗАТОР? \nФигуранты: ${suspectList}\n\n(Введите имя)`);
+        
+        if (!final) return;
 
-    function showVerdict() {
-        if (!inventory.has("Алмазные пуговицы")) {
-            alert("У вас недостаточно доказательств для ареста!");
-            return;
-        }
-        
-        let choice = prompt("КТО ВИНОВЕН? \n1. Сара \n2. Алон \n3. Эли");
-        
-        if (choice && (choice.toLowerCase().includes("эли") || choice === "3")) {
-            alert("ГЕНИАЛЬНО! \n\nВы поняли, что Эли использовал тальк для ловкости рук, а камни покрыл матовым лаком, превратив их в пуговицы своего пиджака. Дело закрыто!");
+        if (final.toLowerCase().includes("эли")) {
+            alert("ПОБЕДА! \n\nЭли Рафаэль был мозгом операции. Он использовал Ицхака и Сару как отвлекающие цели, подбросив тальк и письма. Камни были закрашены лаком и пришиты как пуговицы. Блестяще!");
         } else {
-            alert("ПРОИГРЫШ. Пока вы допрашивали невинных, Эли Рафаэль пересек границу. Пуговицы на его пиджаке обеспечат ему безбедную жизнь в Брюсселе.");
+            alert(`КРАХ... \n\nВы обвинили ${final}. Пока шли разбирательства, Эли Рафаэль прошел контроль. Камни на его пиджаке улетели вместе с ним. Вы уволены.`);
         }
         location.reload();
     }
 </script>
+
 </body>
 </html>
