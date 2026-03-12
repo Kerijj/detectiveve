@@ -2,47 +2,54 @@
     <section id="scene-1" class="scene active">
         <div class="folder">
             <h1>ДЕЛО #77-B</h1>
-            <p class="typewriter">В Алмазном квартале объявлено чрезвычайное положение. У вас есть карта мест, связанных с инцидентом. Соберите все факты, прежде чем вынести приговор.</p>
-            <button onclick="nextScene(2)">ОТКРЫТЬ КАРТУ</button>
+            <p class="typewriter">В Алмазном квартале кража. Мы заблокировали район. Идите по следу улик. Каждое открытие разблокирует следующую точку на карте.</p>
+            <button onclick="startInvestigation()">ОТКРЫТЬ КАРТУ</button>
         </div>
     </section>
 
     <section id="scene-2" class="scene">
         <div class="investigation-layout">
             <div class="map-grid">
-                <h2>КАРТА ОБЪЕКТОВ</h2>
-                <div class="grid-container">
-                    <div class="map-square" onclick="openLocation('office')">🏢 Кабинет Леви</div>
-                    <div class="map-square" onclick="openLocation('security')">🛡️ Пост охраны</div>
-                    <div class="map-square" onclick="openLocation('workshop')">⚙️ Мастерская</div>
-                    <div class="map-square" onclick="openLocation('airport')">✈️ Аэропорт</div>
+                <h2>ОПЕРАТИВНАЯ КАРТА</h2>
+                <div class="grid-container" id="map-grid">
+                    <div class="map-square locked" id="loc-office" onclick="playLocation('office')">1. Кабинет Леви</div>
+                    <div class="map-square locked" id="loc-security" onclick="playLocation('security')">2. Пост охраны</div>
+                    <div class="map-square locked" id="loc-workshop" onclick="playLocation('workshop')">3. Мастерская</div>
+                    <div class="map-square locked" id="loc-airport" onclick="playLocation('airport')">4. Аэропорт</div>
                 </div>
             </div>
 
             <div class="dossier-list">
-                <h2>ДОСЬЕ</h2>
-                <div class="suspect-mini" onclick="showSuspect('wife')">👤 Сара Леви</div>
-                <div class="suspect-mini" onclick="showSuspect('alon')">👤 Алон (Охрана)</div>
-                <div class="suspect-mini" onclick="showSuspect('eli')">👤 Эли (Мастер)</div>
+                <h2>ФИГУРАНТЫ</h2>
+                <div class="suspect-mini">👤 Сара Леви (Жена)</div>
+                <div class="suspect-mini">👤 Алон (Охрана)</div>
+                <div class="suspect-mini">👤 Эли (Мастер)</div>
             </div>
         </div>
 
-        <div id="location-details" class="details-window hidden">
-            <h3 id="loc-title">Название локации</h3>
-            <p id="loc-desc">Описание и найденные улики...</p>
-            <div id="loc-clues"></div>
-            <button onclick="closeDetails()">ЗАКРЫТЬ</button>
+        <div id="event-window" class="event-window hidden">
+            <h3 id="event-title"></h3>
+            <div id="event-body"></div>
+            <button class="close-btn" onclick="closeEvent()">ПОНЯТНО</button>
         </div>
 
-        <button id="final-decision-btn" class="hidden" onclick="nextScene(3)">ВЫНЕСТИ ПРИГОВОР</button>
+        <button id="final-btn" class="hidden" style="margin-top:20px;" onclick="nextScene(3)">ВЫНЕСТИ ВЕРДИКТ</button>
     </section>
 
     <section id="scene-3" class="scene">
         <h2>КОГО ВЫ ОБВИНЯЕТЕ?</h2>
         <div class="final-choices">
-            <button onclick="confront('wife')">Сара Леви</button>
-            <button onclick="confront('alon')">Алон</button>
-            <button onclick="confront('eli')">Эли Рафаэль</button>
+            <button class="verdict-btn" onclick="confront('wife')">Сара Леви</button>
+            <button class="verdict-btn" onclick="confront('alon')">Алон</button>
+            <button class="verdict-btn" onclick="confront('eli')">Эли Рафаэль</button>
         </div>
     </section>
+</div>
+
+<div id="modal" class="modal hidden">
+    <div class="modal-content">
+        <h2 id="res-title"></h2>
+        <p id="res-text"></p>
+        <button onclick="location.reload()">НАЧАТЬ ЗАНОВО</button>
+    </div>
 </div>
