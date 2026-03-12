@@ -2,90 +2,94 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Дело #77-B: Химия Лжи</title>
+    <title>Дело #77-B: Радиомолчание</title>
     <style>
-        :root { --gold: #c2b280; --bg: #0a0a0a; --panel: #161616; --text: #d1c7ac; --toxic: #39ff14; }
-        body { background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; display: flex; justify-content: center; }
-        #case-file { max-width: 1100px; width: 100%; border-right: 1px solid #333; border-left: 1px solid #333; background: #0f0f0f; min-height: 100vh; padding: 25px; box-sizing: border-box; }
+        :root { --gold: #c2b280; --bg: #050505; --panel: #121212; --text: #d1c7ac; --signal: #00ff41; }
+        body { background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        #case-file { max-width: 1200px; width: 100%; background: #0a0a0a; border: 1px solid #333; min-height: 90vh; padding: 25px; box-shadow: 0 0 50px #000; }
         
-        header { border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        
-        /* Экран вывода */
-        #display { background: #000; border: 1px solid #222; padding: 20px; min-height: 300px; margin-bottom: 20px; line-height: 1.6; border-radius: 5px; }
+        header { border-bottom: 2px solid var(--gold); padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
+        .main-layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+
+        /* Экраны */
+        #display { background: #000; border: 1px solid #222; padding: 20px; min-height: 250px; border-radius: 5px; margin-bottom: 20px; font-size: 0.95em; line-height: 1.6; }
         .highlight { color: var(--gold); font-weight: bold; }
 
+        /* Радио-модуль */
+        .radio-module { background: #1a1a1a; border: 1px solid #444; padding: 15px; margin: 15px 0; display: none; }
+        .tuner-container { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        input[type=range] { flex-grow: 1; accent-color: var(--signal); }
+        #frequency-display { color: var(--signal); font-family: 'Orbitron', sans-serif; font-size: 1.2em; min-width: 80px; }
+
         /* Лаборатория */
-        .lab-bench { background: #1a1a1a; border: 1px solid var(--toxic); padding: 15px; display: none; margin: 10px 0; }
-        .beaker { display: inline-block; width: 50px; height: 70px; border: 2px solid #ccc; border-top: none; border-radius: 0 0 10px 10px; margin: 10px; position: relative; cursor: pointer; }
-        .liquid { position: absolute; bottom: 0; width: 100%; transition: height 0.5s, background 0.5s; }
+        .lab-module { background: #1a1a1a; border: 1px solid #0055ff; padding: 15px; margin: 15px 0; display: none; }
+        .beaker { display: inline-block; width: 40px; height: 60px; border: 2px solid #fff; border-top: none; margin: 5px; cursor: pointer; transition: 0.3s; }
+        .beaker:hover { border-color: var(--gold); }
 
         /* Кнопки */
-        .actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        button { background: #1a1a1a; color: var(--text); border: 1px solid #444; padding: 12px; cursor: pointer; transition: 0.2s; font-family: inherit; }
+        .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+        button { background: #151515; color: var(--text); border: 1px solid #444; padding: 12px; cursor: pointer; transition: 0.3s; }
         button:hover:not(:disabled) { border-color: var(--gold); background: #222; }
-        button:disabled { opacity: 0.2; filter: grayscale(1); }
+        button:disabled { opacity: 0.2; }
 
-        /* Досье и Улики */
-        .side-panel { background: var(--panel); padding: 15px; border: 1px solid #333; }
-        .dossier-card { background: #222; padding: 10px; margin-bottom: 10px; border-left: 3px solid var(--gold); cursor: pointer; font-size: 0.85em; }
-        .dossier-card:hover { background: #2a2a2a; }
-        .clue-tag { display: inline-block; background: #332b1a; color: var(--gold); padding: 4px 10px; font-size: 0.75em; border: 1px solid #554a33; margin: 2px; }
+        /* Инвентарь */
+        .side-panel { background: var(--panel); padding: 15px; border-left: 1px solid #333; }
+        .clue-tag { background: #222; border: 1px solid var(--gold); color: var(--gold); padding: 3px 7px; font-size: 0.7em; display: inline-block; margin: 2px; }
+        .dossier-card { background: #1a1a1a; padding: 10px; border-left: 2px solid var(--gold); margin-bottom: 10px; cursor: pointer; font-size: 0.8em; }
 
         .hidden { display: none !important; }
-        .terminal-text { color: var(--toxic); font-size: 0.9em; }
     </style>
 </head>
 <body>
 
 <div id="case-file">
     <header>
-        <div>
-            <h1 style="margin:0; font-size: 1.5em;">ДЕТЕКТИВНЫЙ ОТДЕЛ | КРИМИНАЛИСТИКА</h1>
-            <small>Объект: Алмазная биржа | Текущее дело: 77-B</small>
-        </div>
-        <div id="status-clock" class="highlight">ОСТАЛОСЬ: 30:00</div>
+        <h1 style="margin:0; letter-spacing: 2px;">ОПЕРАТИВНЫЙ ШТАБ: ДЕЛО #77-B</h1>
+        <div id="timer" style="color:red;">ДО ВЫЛЕТА: 30:00</div>
     </header>
 
-    <div class="grid-layout">
-        <div class="main-zone">
+    <div class="main-layout">
+        <div class="center-col">
             <div id="display">
-                <p>[СИСТЕМА]: Инициализация протокола. Ожидание первого действия.</p>
-                <p>Место преступления: Сейфовая комната №4. Вы видите открытую стальную дверь. На полу — едва заметные следы. Воздух пахнет озоном и жженой бумагой.</p>
+                [СИСТЕМА]: Связь установлена. Обьект: Алмазная биржа. <br>
+                На месте преступления царит тишина. Сейф открыт. Охрана дезориентирована. <br>
+                Начните расследование с осмотра улик.
             </div>
 
-            <div id="lab-ui" class="lab-bench">
-                <p class="terminal-text">АНАЛИЗАТОР ВЕЩЕСТВ: Выберите два реагента для анализа порошка.</p>
-                <div style="text-align: center;">
-                    <div class="beaker" onclick="addReagent('acid', '#ff0000')"><div class="liquid" style="height:40%; background:red;"></div><small>K-9</small></div>
-                    <div class="beaker" onclick="addReagent('base', '#0000ff')"><div class="liquid" style="height:40%; background:blue;"></div><small>PH-3</small></div>
-                    <div class="beaker" onclick="addReagent('iodine', '#800080')"><div class="liquid" style="height:40%; background:purple;"></div><small>I-12</small></div>
-                    <br>
-                    <button onclick="runTest()">ЗАПУСТИТЬ ТЕСТ</button>
-                    <button onclick="resetLab()">СБРОС</button>
+            <div id="lab-ui" class="lab-module">
+                <strong style="color:#0055ff;">[ХИМ-АНАЛИЗАТОР]</strong><br>
+                Смешайте два реагента для опознания порошка:<br>
+                <div class="beaker" onclick="selectLab('A')" title="Реагент A">A</div>
+                <div class="beaker" onclick="selectLab('B')" title="Реагент B">B</div>
+                <div class="beaker" onclick="selectLab('C')" title="Реагент C">C</div>
+                <button onclick="runLabTest()">ТЕСТ</button>
+                <div id="lab-feedback" style="font-size:0.8em; margin-top:5px;"></div>
+            </div>
+
+            <div id="radio-ui" class="radio-module">
+                <strong style="color:var(--signal);">[РАДИОПЕРЕХВАТ 800-900 MHz]</strong><br>
+                Настройте частоту на зашифрованный канал:<br>
+                <div class="tuner-container">
+                    <span id="frequency-display">800.0</span>
+                    <input type="range" id="frequency-slider" min="800" max="900" step="0.1" value="800" oninput="tuneRadio(this.value)">
                 </div>
-                <div id="lab-result" style="margin-top:10px; font-size:0.8em;"></div>
+                <div id="radio-feedback" style="font-size:0.8em; margin-top:10px; color:#888; font-style:italic;">Шум эфира...</div>
             </div>
 
-            <div class="actions-grid">
+            <div class="actions">
                 <button onclick="explore('safe')">Осмотреть сейф</button>
-                <button id="btn-lab" class="hidden" onclick="showLab()">Химический анализ</button>
-                <button id="btn-cctv" class="hidden" onclick="explore('cctv')">Логи серверной</button>
-                <button id="btn-workshop" class="hidden" onclick="explore('workshop')">Склад реквизита</button>
-                <button id="btn-airport" class="hidden" onclick="explore('airport')">Перехват (Финал)</button>
+                <button id="btn-lab" class="hidden" onclick="toggleUI('lab-ui')">Лаборатория</button>
+                <button id="btn-radio" class="hidden" onclick="toggleUI('radio-ui')">Радиоприемник</button>
+                <button id="btn-workshop" class="hidden" onclick="explore('workshop')">Склад Эли</button>
+                <button id="btn-airport" class="hidden" onclick="explore('airport')">Аэропорт</button>
             </div>
         </div>
 
-        <div class="side-zone">
-            <div class="side-panel">
-                <h3 style="margin:0 0 10px 0; font-size:0.9em;">ПОДОЗРЕВАЕМЫЕ:</h3>
-                <div id="suspects-list">
-                    <p style="font-size:0.7em; opacity:0.5;">Соберите улики для опознания лиц.</p>
-                </div>
-                
-                <h3 style="margin:20px 0 10px 0; font-size:0.9em;">ИНВЕНТАРЬ УЛИК:</h3>
-                <div id="clues-ui"></div>
-            </div>
+        <div class="side-panel">
+            <h3 style="font-size:0.9em;">ДОСЬЕ:</h3>
+            <div id="suspects"></div>
+            <h3 style="font-size:0.9em; margin-top:20px;">УЛИКИ:</h3>
+            <div id="clues"></div>
         </div>
     </div>
 </div>
@@ -93,107 +97,117 @@
 <script>
     const db = {
         safe: {
-            text: "В сейфе обнаружен белый порошок и странный металлический предмет, похожий на <span class='highlight'>ключ-карту с номером 042</span>. На стенке сейфа свежая царапина в форме круга.",
-            clues: ["Неизвестный порошок", "Ключ-карта 042"],
+            text: "В сейфе найден белый порошок и обрывок бумаги с числами: <span class='highlight'>927</span> и <span class='highlight'>45</span>. <br>В базе данных охраны указано, что жетон Алона имеет номер 45. <br>Кто-то стер логи за 14:02.",
+            clues: ["Порошок", "Числа 927 и 45", "Жетон Алона (45)"],
             unlock: "btn-lab",
             sus: ["wife", "alon"]
         },
-        cctv: {
-            text: "Логи показывают, что охранник 042 (Алон) отключил питание за 2 минуты до взлома. Однако в его журнале написано: <span class='highlight'>'Выполнял приказ Сары Л.'</span>. Сама Сара в это время была в кафе.",
-            clues: ["Ложное алиби Сары"],
-            unlock: "btn-workshop"
-        },
         workshop: {
-            text: "На складе Эли вы находите растворитель и коробку с биркой 'Для костюма №15'. Внутри коробки — серый лак и чек на покупку <span class='highlight'>талька для рук</span>.",
-            clues: ["Серый лак", "Чек на тальк"],
+            text: "На складе Эли вы находите банку матового лака. На стене висит календарь, где дата кражи обведена кружком, а рядом написано: <span class='highlight'>'882.0'</span>.",
+            clues: ["Матовый лак", "Заметка 882.0"],
             unlock: "btn-airport",
             sus: ["eli"]
         },
         airport: {
-            text: "Аэропорт Бен-Гурион. Подозреваемые на паспортном контроле. Вы замечаете, что один из них постоянно поправляет <span class='highlight'>тяжелый серый пиджак</span>.",
-            clues: ["Тяжелый пиджак"],
+            text: "Вы в терминале. Эли Рафаэль проходит досмотр. На нем серый пиджак. Таможня ничего не находит, но вы знаете секрет лака.",
+            clues: ["Серый пиджак"],
             unlock: "final"
         }
     };
 
-    const suspects = {
-        wife: { name: "Сара Леви", bio: "Супруга. Изучала 'Магию рук' в Париже. Утверждает, что ключ-карта 042 была украдена у нее." },
-        alon: { name: "Алон (Охрана)", bio: "Номер жетона 042. Получил крупный перевод на счет за день до кражи." },
-        eli: { name: "Эли Рафаэль", bio: "Мастер реквизита. Раньше работал в цирке. Специалист по механическим замкам." }
+    const dossiers = {
+        wife: { name: "Сара Леви", bio: "Жена жертвы. В день кражи искала способ открыть сейф 'без следов'." },
+        alon: { name: "Алон (Охрана)", bio: "Номер 45. Утверждает, что слышал странный гул перед отключением камер." },
+        eli: { name: "Эли Рафаэль", bio: "Иллюзионист. Мастер микро-механики. Пропал сразу после инцидента." }
     };
 
-    let state = { clues: new Set(), knownSus: new Set(), labMix: [] };
+    let state = { clues: new Set(), knownSus: new Set(), labMix: [], radioFound: false };
 
     function explore(id) {
         const node = db[id];
-        document.getElementById('display').innerHTML = `<p>${node.text}</p>`;
-        node.clues.forEach(c => { state.clues.add(c); renderClues(); });
+        document.getElementById('display').innerHTML = node.text;
+        node.clues.forEach(c => state.clues.add(c));
         if(node.sus) node.sus.forEach(s => state.knownSus.add(s));
         if(node.unlock && node.unlock !== "final") document.getElementById(node.unlock).classList.remove('hidden');
-        if(id === 'airport') openVerdict();
-        renderSuspects();
+        if(id === 'safe') document.getElementById('btn-radio').classList.remove('hidden');
+        renderUI();
     }
 
-    function renderSuspects() {
-        const list = document.getElementById('suspects-list');
-        list.innerHTML = "";
+    function toggleUI(id) {
+        const el = document.getElementById(id);
+        el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+    }
+
+    // ЛАБОРАТОРИЯ
+    function selectLab(r) {
+        if(state.labMix.length < 2) state.labMix.push(r);
+        document.getElementById('lab-feedback').innerText = "Выбрано: " + state.labMix.join(", ");
+    }
+
+    function runLabTest() {
+        const mix = state.labMix.sort().join("");
+        const fb = document.getElementById('lab-feedback');
+        if(mix === "AB") {
+            fb.innerHTML = "<span style='color:lime'>РЕЗУЛЬТАТ: Это тальк для рук иллюзиониста.</span>";
+            state.clues.add("Тальк фокусника");
+            renderUI();
+        } else {
+            fb.innerHTML = "<span style='color:red'>РЕАКЦИЯ НЕГАТИВНА. Спробуйте другие реагенты.</span>";
+            state.labMix = [];
+        }
+    }
+
+    // РАДИО
+    function tuneRadio(val) {
+        document.getElementById('frequency-display').innerText = parseFloat(val).toFixed(1);
+        const fb = document.getElementById('radio-feedback');
+        // Подсказка: 927 - 45 = 882. Это частота из записки
+        if(val == 882.0) {
+            fb.innerHTML = "<span style='color:var(--signal)'>ГОЛОС: '...лак высохнет через час. Встречаемся в аэропорту. Пуговицы уже на пиджаке, Эли...'</span>";
+            if(!state.radioFound) {
+                state.clues.add("Перехват: Пуговицы");
+                state.knownSus.add("eli");
+                document.getElementById('btn-workshop').classList.remove('hidden');
+                state.radioFound = true;
+                renderUI();
+            }
+        } else {
+            fb.innerText = "Шум эфира...";
+        }
+    }
+
+    function renderUI() {
+        document.getElementById('clues').innerHTML = Array.from(state.clues).map(c => `<span class="clue-tag">${c}</span>`).join('');
+        const susDiv = document.getElementById('suspects');
+        susDiv.innerHTML = "";
         state.knownSus.forEach(id => {
-            const div = document.createElement('div');
-            div.className = "dossier-card";
-            div.innerHTML = `<strong>${suspects[id].name}</strong>`;
-            div.onclick = () => {
-                document.getElementById('display').innerHTML = `<h3>ДОСЬЕ: ${suspects[id].name}</h3><p>${suspects[id].bio}</p>`;
-                if(id === 'alon') document.getElementById('btn-cctv').classList.remove('hidden');
-            };
-            list.appendChild(div);
+            const d = document.createElement('div');
+            d.className = "dossier-card";
+            d.innerHTML = `<strong>${dossiers[id].name}</strong>`;
+            d.onclick = () => document.getElementById('display').innerHTML = `<h3>${dossiers[id].name}</h3><p>${dossiers[id].bio}</p>`;
+            susDiv.appendChild(d);
         });
     }
 
-    function renderClues() {
-        const ui = document.getElementById('clues-ui');
-        ui.innerHTML = Array.from(state.clues).map(c => `<span class="clue-tag">${c}</span>`).join('');
-    }
+    // Таймер
+    let timeLeft = 1800;
+    setInterval(() => {
+        timeLeft--;
+        let m = Math.floor(timeLeft/60);
+        let s = timeLeft%60;
+        document.getElementById('timer').innerText = `ДО ВЫЛЕТА: ${m}:${s<10?'0'+s:s}`;
+    }, 1000);
 
-    // ЛАБОРАТОРНАЯ ЛОГИКА
-    function showLab() {
-        document.getElementById('lab-ui').style.display = "block";
-    }
-
-    function addReagent(name, color) {
-        if(state.labMix.length < 2) {
-            state.labMix.push(name);
-            document.getElementById('lab-result').innerHTML += `Добавлен реагент... `;
-        }
-    }
-
-    function runTest() {
-        const res = document.getElementById('lab-result');
-        if(state.labMix.includes('base') && state.labMix.includes('iodine')) {
-            res.innerHTML = "<span style='color:lime'>РЕАКЦИЯ: Фиолетовое окрашивание. Порошок идентифицирован как ТАЛЬК ФОКУСНИКА.</span>";
-            state.clues.add("Идентифицированный тальк");
-            renderClues();
-        } else {
-            res.innerHTML = "<span style='color:red'>РЕАКЦИЯ: Осадок не обнаружен. Состав не определен.</span>";
-        }
-    }
-
-    function resetLab() {
-        state.labMix = [];
-        document.getElementById('lab-result').innerHTML = "";
-    }
-
+    // ФИНАЛ
     function openVerdict() {
-        setTimeout(() => {
-            const who = prompt("КТО ПРЕСТУПНИК?");
-            const where = prompt("ГДЕ АЛМАЗЫ? (Одно слово)");
-            
-            if(who.toLowerCase().includes("эли") && where.toLowerCase().includes("пуговицы")) {
-                alert("ВЕРНО! Эли Рафаэль арестован. Тальк на месте преступления выдал его. Алмазы были закрашены серым лаком и пришиты как пуговицы. Вы раскрыли дело!");
-            } else {
-                alert("ОШИБКА. Преступник покинул страну. Ваше расследование провалено.");
-            }
-            location.reload();
-        }, 1000);
+        const who = prompt("КТО ПРЕСТУПНИК?");
+        const how = prompt("ГДЕ АЛМАЗЫ?");
+        if(who.toLowerCase().includes("эли") && how.toLowerCase().includes("пуговицы")) {
+            alert("ПОБЕДА! Вы использовали радиоперехват и химию, чтобы разоблачить величайшую подмену. Эли Рафаэль арестован. Алмазы возвращены!");
+        } else {
+            alert("ПРОИГРЫШ. Вор улетел, а вы остались ни с чем.");
+        }
+        location.reload();
     }
 </script>
 
