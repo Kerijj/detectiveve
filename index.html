@@ -2,41 +2,49 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Dossier Investigation</title>
+    <title>Detective Board</title>
     <style>
-        body { background: #e0d7c6; color: #2c241a; font-family: serif; padding: 40px; }
-        .folder { max-width: 800px; margin: auto; border: 10px solid #c2b280; padding: 40px; background: #fdf5e6; position: relative; }
-        .stamp { position: absolute; top: 20px; right: 20px; border: 3px solid #8b0000; color: #8b0000; transform: rotate(15deg); padding: 10px; font-weight: bold; }
-        .loc-btn { display: inline-block; background: #c2b280; padding: 10px; margin: 5px; cursor: pointer; }
-        .dossier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .person { border: 1px solid #000; padding: 10px; font-size: 0.8em; background: #fff; }
+        body { background: #121212; color: #eee; font-family: sans-serif; display: grid; grid-template-columns: 1fr 300px; gap: 20px; padding: 20px; }
+        .main { border: 1px solid #333; padding: 20px; background: #1e1e1e; }
+        .side { border: 1px solid #333; padding: 20px; background: #252525; }
+        .card { background: #333; padding: 10px; margin-bottom: 10px; border-radius: 4px; cursor: pointer; }
+        .card:hover { border: 1px solid gold; }
+        .locked { opacity: 0.2; pointer-events: none; }
+        .inventory-item { color: gold; font-size: 0.8em; margin-bottom: 5px; }
     </style>
 </head>
 <body>
-    <div class="folder">
-        <div class="stamp">TOP SECRET</div>
-        <h1>ДОСЬЕ: КРАЖА НА БИРЖЕ</h1>
-        <p>Нажмите на локацию для сбора фактов:</p>
-        <div class="loc-btn" onclick="act('office')">Офис Леви</div>
-        <div class="loc-btn" onclick="act('security')">Охрана</div>
-        <div class="loc-btn" onclick="act('workshop')">Мастерская</div>
-        
-        <div class="dossier-grid">
-            <div id="p1" class="person"><b>Алон (Охрана)</b><p>?</p></div>
-            <div id="p2" class="person"><b>Сара (Жена)</b><p>?</p></div>
-            <div id="p3" class="person"><b>Эли (Мастер)</b><p>?</p></div>
-        </div>
-        <button onclick="check()" style="margin-top:20px;">ОБЪЯВИТЬ ВИНОВНОГО</button>
+    <div class="main">
+        <h2>МЕСТА ПРЕСТУПЛЕНИЯ</h2>
+        <div class="card" onclick="reveal('office', this)">🏢 Кабинет господина Леви</div>
+        <div id="loc-workshop" class="card locked" onclick="reveal('workshop', this)">🛠️ Мастерская Эли</div>
+        <div id="loc-airport" class="card locked" onclick="reveal('airport', this)">✈️ Аэропорт (Гейт 12)</div>
+        <div id="story-log" style="margin-top:20px; color:#aaa;"><i>Нажмите на объект для начала...</i></div>
+    </div>
+    <div class="side">
+        <h3>УЛИКИ</h3>
+        <div id="inventory"></div>
+        <hr>
+        <button id="final-btn" class="locked" onclick="finish()" style="width:100%; padding:10px; background: #8b0000; color: white; border: none;">ВЫНЕСТИ ВЕРДИКТ</button>
     </div>
 <script>
-    function act(id) {
-        if(id === 'office') document.getElementById('p2').querySelector('p').innerText = "Знала код сейфа.";
-        if(id === 'security') document.getElementById('p1').querySelector('p').innerText = "Выключил камеру.";
-        if(id === 'workshop') document.getElementById('p3').querySelector('p').innerText = "Сделал алмазные пуговицы.";
+    const steps = {
+        office: { text: "Найдена подставка с секретом. Сара знала код, Эли был в гостях.", clue: "Механизм подмены", next: "loc-workshop" },
+        workshop: { text: "Найдены чертежи пуговиц. Алон отключал камеры.", clue: "Чертежи пуговиц", next: "loc-airport" },
+        airport: { text: "Вы видите Эли в пиджаке. Пуговицы — это алмазы!", clue: "Алмазные пуговицы", next: "final" }
+    };
+    function reveal(id, el) {
+        const data = steps[id];
+        document.getElementById('story-log').innerText = data.text;
+        document.getElementById('inventory').innerHTML += `<div class="inventory-item">● ${data.clue}</div>`;
+        el.style.borderColor = "green";
+        if(data.next === 'final') document.getElementById('final-btn').classList.remove('locked');
+        else document.getElementById(data.next).classList.remove('locked');
     }
-    function check() {
-        const v = prompt("Имя преступника:");
-        alert(v.toLowerCase() === 'эли' ? "Верно!" : "Ложь.");
+    function finish() {
+        const choice = prompt("Кто вор? (Сара, Алон или Эли)");
+        alert(choice.toLowerCase() === 'эли' ? "ГЕНИАЛЬНО! Вы раскрыли дело." : "УВЫ! Вор ускользнул.");
+        location.reload();
     }
 </script>
 </body>
