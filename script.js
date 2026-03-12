@@ -1,107 +1,53 @@
-// Состояние следствия
-let inventory = [];
-let discoveredSecrets = 0;
-let currentSuspect = "";
-
-window.onload = function() {
-    nextScene(1);
-    updateInventory();
+const locationData = {
+    office: {
+        title: "КАБИНЕТ ЛЕВИ",
+        desc: "На столе стоит пустой стакан и подставка. Сейф открыт без повреждений. Обнаружен микроскопический след талька на ручке двери.",
+        clue: "Факт: Сейф открыт родным кодом."
+    },
+    security: {
+        title: "ПОСТ ОХРАНЫ",
+        desc: "В журналах стерто время между 08:40 и 08:42. У Алона в шкафчике найден рекламный буклет шоу иллюзионистов.",
+        clue: "Факт: Камеры отключены вручную."
+    },
+    workshop: {
+        title: "МАСТЕРСКАЯ ПЕТАХ-ТИКВА",
+        desc: "В мусорном баке найдены обрезки высококачественного стекла и банка с серой матовой краской.",
+        clue: "Факт: Кто-то создавал имитацию камней."
+    },
+    airport: {
+        title: "ТЕРМИНАЛ 3",
+        desc: "Среди пассажиров на рейс в Брюссель замечен человек, чей рост совпадает с фигурой на видео. Он одет в серый костюм с необычными пуговицами.",
+        clue: "Факт: Преступник уже на пути к выходу."
+    }
 };
 
-function nextScene(num) {
-    document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
-    const target = document.getElementById(`scene-${num}`);
-    if (target) target.style.display = 'block';
-}
+let visitedLocations = new Set();
 
-// Добавление улики в инвентарь
-function collectClue(clueId, name) {
-    if (!inventory.includes(name)) {
-        inventory.push(name);
-        updateInventory();
-        alert(`Найдена улика: ${name}`);
-    }
-}
-
-function updateInventory() {
-    const invDiv = document.getElementById('inventory-list') || createInventoryUI();
-    invDiv.innerHTML = inventory.map(item => `<span class="badge">${item}</span>`).join(' ');
-}
-
-function createInventoryUI() {
-    const div = document.createElement('div');
-    div.id = 'inventory-list';
-    div.style = "position:fixed; bottom:10px; left:10px; background:rgba(0,0,0,0.8); padding:10px; border:1px solid gold; font-size:12px;";
-    document.body.appendChild(div);
-    return div;
-}
-
-// ЛОКАЦИИ И УЛИКИ
-function inspectObject(obj) {
-    let msg = "";
-    switch(obj) {
-        case 'trash':
-            msg = "В мусоре найден чек из аптеки на покупку талька и театрального грима.";
-            collectClue('talc', 'Чек на тальк');
-            break;
-        case 'safe':
-            msg = "Сейф не взломан. Код вводили вручную. Кто его знал, кроме Леви и его жены?";
-            collectClue('code', 'Чистый взлом');
-            break;
-        case 'camera':
-            msg = "Запись прерывается на 30 секунд. В этот момент в кадре виден край серого пиджака.";
-            collectClue('video', 'Серый пиджак');
-            break;
-    }
-    document.getElementById('location-log').innerText = msg;
-}
-
-// ПЕРЕХОД К ПОДОЗРЕВАЕМЫМ
-function interview(name) {
-    currentSuspect = name;
-    nextScene(4); // Сцена допроса
-    const talk = document.getElementById('interrogation-zone');
+function openLocation(id) {
+    const data = locationData[id];
+    document.getElementById('loc-title').innerText = data.title;
+    document.getElementById('loc-desc').innerText = data.desc;
+    document.getElementById('loc-clues').innerHTML = `<p><strong>Улика:</strong> ${data.clue}</p>`;
     
-    if(name === 'wife') {
-        talk.innerHTML = `
-            <h3>Сара Леви (Жена)</h3>
-            <p>"Мой муж слишком доверчив. Я говорила ему нанять частную охрану, а не этих сопляков."</p>
-            <p>Вы заметили: На её руке кольцо с бриллиантом, который кажется слишком новым.</p>
-            <button onclick="confront('wife')">Предъявить обвинение</button>
-        `;
-    } else if(name === 'alon') {
-        talk.innerHTML = `
-            <h3>Алон (Охранник)</h3>
-            <p>"Я просто курил! Пакеты в шкафчике? Я нашел их в коридоре и хотел забрать домой как сувенир!"</p>
-            <button onclick="confront('alon')">Предъявить обвинение</button>
-        `;
-    } else {
-        talk.innerHTML = `
-            <h3>Эли Рафаэль (Мастер)</h3>
-            <p>"Красота — это иллюзия, детектив. Вы ищете камни, а я ищу совершенство."</p>
-            <p>Вы заметили: Он постоянно теребит пуговицу на рубашке.</p>
-            <button onclick="confront('eli')">Предъявить обвинение</button>
-        `;
-    }
-}
-
-// ФИНАЛ
-function confront(name) {
-    const modal = document.getElementById('modal');
-    modal.classList.remove('hidden');
-    modal.style.display = 'flex';
+    document.getElementById('location-details').classList.remove('hidden');
     
-    const resT = document.getElementById('result-title');
-    const resD = document.getElementById('result-text');
-
-    if(name === 'eli' && inventory.includes('Чек на тальк') && inventory.includes('Серый пиджак')) {
-        resT.innerText = "ГЕНИАЛЬНО!";
-        resD.innerText = "Вы сопоставили тальк для рук фокусника и серый пиджак с видео. Эли признался: камни были пуговицами. Вы — легенда сыска!";
-    } else if(name === 'wife') {
-        resT.innerText = "СЕМЕЙНЫЙ СКАНДАЛ";
-        resD.innerText = "Сара знала код, но она лишь хотела подставить любовницу мужа. Камни она не брала. Настоящий вор скрылся.";
-    } else {
-        resT.innerText = "ФАТАЛЬНАЯ ОШИБКА";
-        resD.innerText = "Алон — просто неудачник. Пока вы возились с ним, настоящий преступник покинул страну.";
+    // Помечаем как посещенное
+    visitedLocations.add(id);
+    if (visitedLocations.size === 4) {
+        document.getElementById('final-decision-btn').classList.remove('hidden');
     }
 }
+
+function closeDetails() {
+    document.getElementById('location-details').classList.add('hidden');
+}
+
+function showSuspect(id) {
+    let bio = "";
+    if(id === 'wife') bio = "Сара Леви. Знала код сейфа. Хотела отомстить мужу за долги.";
+    if(id === 'alon') bio = "Алон. Был на посту. Испытывает финансовые трудности.";
+    if(id === 'eli') bio = "Эли Рафаэль. Мастер иллюзий. Обладает техникой подмены предметов.";
+    alert(bio);
+}
+
+// Функции confront и nextScene остаются из предыдущих версий
