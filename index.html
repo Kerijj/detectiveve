@@ -2,44 +2,41 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Case #77-B: The Mastermind's Gambit</title>
+    <title>Дело #77-B: Анатомия Лжи</title>
     <style>
-        :root { --gold: #c2b280; --bg: #050505; --panel: #111; --text: #d1c7ac; --signal: #00ff41; --red: #ff3333; }
+        :root { --gold: #c2b280; --bg: #0a0a0a; --panel: #111; --text: #d1c7ac; --red: #ff3333; --cyan: #00cccc; }
         body { background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        #case-file { max-width: 1200px; width: 100%; background: #0a0a0a; border: 1px solid #333; min-height: 95vh; padding: 25px; box-shadow: 0 0 50px #000; position: relative; box-sizing: border-box; }
+        #case-file { max-width: 1200px; width: 100%; background: #0d0d0d; border: 1px solid #333; min-height: 95vh; padding: 25px; box-shadow: 0 0 50px #000; box-sizing: border-box; }
         
         header { border-bottom: 2px solid var(--gold); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .main-layout { display: grid; grid-template-columns: 1fr 350px; gap: 25px; }
+        .main-layout { display: grid; grid-template-columns: 1fr 380px; gap: 25px; }
 
-        #display { background: #000; border: 1px solid #222; padding: 20px; min-height: 300px; border-radius: 5px; margin-bottom: 20px; font-size: 0.95em; line-height: 1.6; overflow-y: auto; max-height: 400px; }
+        #display { background: #000; border: 1px solid #222; padding: 20px; min-height: 380px; border-radius: 5px; margin-bottom: 20px; font-size: 0.95em; line-height: 1.6; overflow-y: auto; border-left: 3px solid #444; }
         .highlight { color: var(--gold); font-weight: bold; }
 
-        /* Модули */
-        .module-box { background: #1a1a1a; border: 1px solid #444; padding: 20px; margin: 15px 0; border-radius: 4px; display: none; }
-        
         /* Сейф */
-        .safe-dial { width: 120px; height: 120px; border: 4px dashed var(--gold); border-radius: 50%; margin: 10px auto; display: flex; align-items: center; justify-content: center; font-size: 2em; color: var(--gold); background: #000; cursor: pointer; }
-        .safe-dial:hover { box-shadow: 0 0 15px rgba(194, 178, 128, 0.3); }
+        .module-box { background: #1a1a1a; border: 1px solid #444; padding: 20px; margin: 15px 0; border-radius: 4px; display: none; }
+        .safe-dial { width: 130px; height: 130px; border: 5px double var(--gold); border-radius: 50%; margin: 10px auto; display: flex; align-items: center; justify-content: center; font-size: 2.2em; color: var(--gold); background: #000; cursor: pointer; }
 
-        /* Радио */
-        .tuner-container { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
-        input[type=range] { flex-grow: 1; accent-color: var(--signal); }
-        #freq-val { color: var(--signal); font-size: 1.4em; min-width: 100px; text-align: center; }
+        /* Лаборатория */
+        .lab-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .lab-btn { background: #111; border: 1px solid var(--cyan); color: var(--cyan); padding: 10px; cursor: pointer; text-align: center; font-size: 0.8em; }
+        .lab-btn:hover { background: var(--cyan); color: #000; }
 
-        /* Кнопки */
+        /* Кнопки действий */
         .actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        button { background: #151515; color: var(--text); border: 1px solid #444; padding: 12px; cursor: pointer; transition: 0.3s; font-size: 0.8em; text-transform: uppercase; }
+        button { background: #151515; color: var(--text); border: 1px solid #444; padding: 12px; cursor: pointer; transition: 0.3s; font-size: 0.75em; text-transform: uppercase; }
         button:hover:not(:disabled) { border-color: var(--gold); background: #222; color: #fff; }
-        button:disabled { opacity: 0.2; cursor: default; }
+        button:disabled { opacity: 0.2; }
 
-        /* Панели */
+        /* Боковая панель */
         .side-panel { background: var(--panel); padding: 20px; border-left: 1px solid #333; }
-        .dossier-card { background: #151515; padding: 12px; border: 1px solid #333; border-left: 3px solid var(--gold); margin-bottom: 12px; cursor: pointer; }
-        .dossier-card:hover { border-color: #eee; }
-        .clue-tag { background: #1a1a13; border: 1px solid #443c24; color: var(--gold); padding: 4px 8px; font-size: 0.75em; display: inline-block; margin: 3px; }
+        .dossier-card { background: #151515; padding: 12px; border: 1px solid #333; border-left: 4px solid var(--gold); margin-bottom: 12px; cursor: pointer; font-size: 0.85em; }
+        .dossier-card:hover { transform: translateX(5px); }
+        .clue-tag { background: #1a1a13; border: 1px solid #443c24; color: var(--gold); padding: 5px 10px; font-size: 0.75em; display: inline-block; margin: 3px; }
 
-        .terminal-input { background: #000; border: 1px solid var(--signal); color: var(--signal); padding: 10px; font-family: monospace; width: 150px; text-align: center; }
         .hidden { display: none !important; }
+        .urgent { border-color: var(--red) !important; color: var(--red) !important; }
     </style>
 </head>
 <body>
@@ -47,25 +44,24 @@
 <div id="case-file">
     <header>
         <div>
-            <h1 style="margin:0; font-size: 1.4em; letter-spacing: 2px;">FEDERAL INVESTIGATION: CASE #77-B</h1>
-            <small>СТАТУС: АКТИВНОЕ РАССЛЕДОВАНИЕ</small>
+            <h1 style="margin:0; font-size: 1.5em; letter-spacing: 3px;">ОПЕРАТИВНЫЙ ШТАБ | ДЕЛО #77-B</h1>
+            <small>ОБЪЕКТ: АЛМАЗНАЯ БИРЖА | ИДЕТ РАССЛЕДОВАНИЕ</small>
         </div>
-        <div id="timer" style="color:var(--red); font-weight: bold; border: 1px solid var(--red); padding: 5px 10px;">60:00</div>
+        <div id="timer" style="color:var(--red); font-weight: bold; font-size: 1.2em;">60:00</div>
     </header>
 
     <div class="main-layout">
         <div class="content-col">
             <div id="display">
-                <p class="highlight">[СИСТЕМА]: ДОБРО ПОЖАЛОВАТЬ, ДЕТЕКТИВ.</p>
-                <p>Алмазы "Сердце пустыни" исчезли. Сейф модели Aegis-9 заблокирован системой безопасности. <br><br>
-                1. Изучите <b>Досье</b> справа.<br>
-                2. Найдите код доступа к сейфу.<br>
-                3. Используйте терминал для восстановления логов.</p>
+                <p class="highlight">[СВОДКА]:</p>
+                <p>Из центрального хранилища исчезли алмазы "Слезы Нептуна". Сейф вскрыт без следов взлома. <br><br>
+                <b>ВАША ПЕРВАЯ ЗАДАЧА:</b><br>
+                Изучите досье персонала. Кто-то оставил цифровой след. Найдите код и вскройте сейф, чтобы собрать первичные улики.</p>
             </div>
 
             <div id="safe-ui" class="module-box" style="display:block;">
-                <p style="text-align: center;"><b>ВЗЛОМ ЗАМКА СЕЙФА</b><br>
-                <small>(Нажимайте стрелки или кликните на число, чтобы ввести код)</small></p>
+                <p style="text-align: center;"><b>МЕХАНИЧЕСКИЙ ЗАМОК AEGIS</b><br>
+                <small>Кликните по цифре для ввода кода вручную</small></p>
                 <div id="dial" class="safe-dial" onclick="manualInput()">000</div>
                 <div style="text-align: center; margin-top: 15px;">
                     <button onclick="rotateDial(-10)">-10</button>
@@ -73,40 +69,36 @@
                     <button onclick="rotateDial(1)">+1</button>
                     <button onclick="rotateDial(10)">+10</button>
                     <br><br>
-                    <button onclick="checkSafe()" style="border-color: var(--signal); width: 200px; font-weight: bold;">ОТКРЫТЬ СЕЙФ</button>
+                    <button onclick="checkSafe()" style="border-color: var(--gold); width: 220px; font-weight: bold;">ОТКРЫТЬ</button>
                 </div>
             </div>
 
-            <div id="terminal-ui" class="module-box">
-                <p style="color:var(--signal)">[SECURITY TERMINAL]: Введите ID сотрудника для доступа к логам.</p>
-                <input type="text" id="term-pass" class="terminal-input" placeholder="ID NUMBER">
-                <button onclick="checkTerminal()" style="color:var(--signal); border-color:var(--signal)">ВХОД</button>
-                <p id="term-hint" style="font-size:0.7em; margin-top:10px;"></p>
-            </div>
-
-            <div id="radio-ui" class="module-box">
-                <p style="color:var(--signal)">[RADIO SCANNER]: Перехват зашифрованных частот...</p>
-                <div class="tuner-container">
-                    <span id="freq-val">800.0 MHz</span>
-                    <input type="range" id="freq-slider" min="800" max="999" step="0.5" value="800" oninput="tune(this.value)">
+            <div id="lab-ui" class="module-box">
+                <p style="color:var(--cyan)"><b>[ХИМИЧЕСКИЙ АНАЛИЗ]</b></p>
+                <p>Проведите тесты образцов, найденных в сейфе:</p>
+                <div class="lab-grid">
+                    <div class="lab-btn" onclick="labAction('ph')">Кислотный тест</div>
+                    <div class="lab-btn" onclick="labAction('uv')">УФ-сканирование</div>
+                    <div class="lab-btn" onclick="labAction('burn')">Термо-анализ</div>
                 </div>
-                <div id="radio-output" style="font-size:0.9em; min-height:50px; margin-top:15px; color:#888; border-top: 1px solid #333; padding-top:10px;">Шум эфира...</div>
+                <div id="lab-res" style="margin-top:15px; padding:12px; background:#000; font-size:0.9em; min-height:50px; border: 1px solid #222;"></div>
             </div>
 
             <div class="actions">
-                <button id="nav-safe" onclick="showModule('safe-ui')">⚙️ Сейф</button>
-                <button id="nav-term" class="hidden" onclick="showModule('terminal-ui')">🖥️ Терминал</button>
-                <button id="nav-radio" class="hidden" onclick="showModule('radio-ui')">📻 Радио-сканер</button>
-                <button id="nav-workshop" class="hidden" onclick="visit('workshop')">🏚️ Склад</button>
-                <button id="nav-airport" class="hidden" onclick="visit('airport')">✈️ Аэропорт</button>
+                <button id="nav-safe" onclick="showModule('safe-ui')">Сейф</button>
+                <button id="nav-lab" class="hidden" onclick="showModule('lab-ui')">Лаборатория</button>
+                <button id="nav-cafe" class="hidden" onclick="goTo('cafe')">☕ Кафе "Биржа"</button>
+                <button id="nav-post" class="hidden" onclick="goTo('post')">📦 Почта</button>
+                <button id="nav-workshop" class="hidden" onclick="goTo('workshop')">⚙️ Мастерская</button>
+                <button id="nav-airport" class="hidden urgent" onclick="goTo('airport')">✈️ Аэропорт</button>
             </div>
         </div>
 
         <div class="side-panel">
-            <h3 style="margin-top:0; font-size:0.9em;">ПОДОЗРЕВАЕМЫЕ:</h3>
+            <h3 style="margin-top:0; font-size:0.8em; opacity:0.6;">ПОДОЗРЕВАЕМЫЕ:</h3>
             <div id="suspects-list"></div>
             <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
-            <h3 style="font-size:0.9em;">НАЙДЕННЫЕ УЛИКИ:</h3>
+            <h3 style="font-size:0.8em; opacity:0.6;">УЛИКИ И ФАКТЫ:</h3>
             <div id="clues-list"></div>
         </div>
     </div>
@@ -114,30 +106,31 @@
 
 <script>
     const suspects = {
-        wife: { name: "Сара Леви", bio: "Жена владельца. Крупные долги. Знала, что код сейфа — это <b>номер жетона</b> того, кому муж доверял больше всего." },
-        alon: { name: "Алон (Охрана)", bio: "Номер жетона: <b>412</b>. На его счету подозрительный перевод. Утверждает, что спал на посту." },
-        eli: { name: "Эли Рафаэль", bio: "Мастер реквизита. Увлекается радиоэлектроникой. В день кражи приносил в офис 'новый прибор'." },
-        izhak: { name: "Ицхак (Ювелир)", bio: "Оценщик. Был замечен в подсобке со схемой частот охранных раций." }
+        wife: { name: "Сара Леви", bio: "Жена владельца. Крупно проигралась в казино. Знала, что муж доверяет Алону и использует номер его жетона как код 'на всякий случай'." },
+        alon: { name: "Алон (Охрана)", bio: "Номер жетона: <b>527</b>. Бывший спецназовец. В день кражи странным образом 'забыл' проверить заднюю дверь." },
+        mark: { name: "Марк (Курьер)", bio: "Доставляет почту. Видели, как он выносил тяжелую посылку через 10 минут после кражи. Одет в серую куртку." },
+        eli: { name: "Эли Рафаэль", bio: "Мастер-механик. В прошлом — иллюзионист. Профессионально работает с гримом, лаками и микро-механикой." },
+        izhak: { name: "Ицхак (Ювелир)", bio: "Оценщик. Дружит с Эли. Видели, как они вместе изучали свойства матовых покрытий." },
+        admin: { name: "Помощник", bio: "Занимается архивами. Слышал, как кто-то в мастерской обсуждал 'способ превратить камни в пластик'." }
     };
 
     let state = {
-        safeValue: 0,
-        correctSafe: 412, // Код теперь трехзначный
+        safeVal: 0,
+        correctCode: 527,
         clues: new Set(),
         time: 3600
     };
 
-    // Инициализация
     function init() {
         const sList = document.getElementById('suspects-list');
         for (let key in suspects) {
             const s = suspects[key];
             const div = document.createElement('div');
             div.className = "dossier-card";
-            div.innerHTML = `<strong>${s.name}</strong><br><small>Нажмите для деталей...</small>`;
+            div.innerHTML = `<strong>${s.name}</strong><br><small>Открыть досье...</small>`;
             div.onclick = () => {
-                document.getElementById('display').innerHTML = `<h3>${s.name}</h3><p>${s.bio}</p>`;
-                if(key === 'alon') state.clues.add("Номер жетона Алона: 412");
+                document.getElementById('display').innerHTML = `<h3>ДОСЬЕ: ${s.name}</h3><p>${s.bio}</p>`;
+                if(key === 'alon') state.clues.add("Жетон Алона: 527");
                 renderClues();
             };
             sList.appendChild(div);
@@ -145,88 +138,77 @@
     }
 
     // СЕЙФ
-    function rotateDial(v) {
-        state.safeValue += v;
-        if(state.safeValue > 999) state.safeValue = 0;
-        if(state.safeValue < 0) state.safeValue = 999;
-        document.getElementById('dial').innerText = state.safeValue.toString().padStart(3, '0');
+    function rotateDial(n) {
+        state.safeVal += n;
+        if(state.safeVal > 999) state.safeVal = 0;
+        if(state.safeVal < 0) state.safeVal = 999;
+        document.getElementById('dial').innerText = state.safeVal.toString().padStart(3, '0');
     }
 
     function manualInput() {
-        let val = prompt("Введите 3-значный код:");
-        if (val !== null && !isNaN(val)) {
-            state.safeValue = parseInt(val);
-            rotateDial(0);
-        }
+        let v = prompt("Введите код (3 цифры):");
+        if(v && !isNaN(v)) { state.safeVal = parseInt(v); rotateDial(0); }
     }
 
     function checkSafe() {
-        if(state.safeValue === state.correctSafe) {
-            alert("ЩЕЛЧОК! Сейф открыт.");
-            state.clues.add("Доступ к сейфу получен");
+        if(state.safeVal === state.correctCode) {
+            alert("СЕЙФ ОТКРЫТ");
+            state.clues.add("Сейф вскрыт");
             document.getElementById('display').innerHTML = `
-                <p class="highlight">[УЛИКА]: Внутри сейфа пусто.</p>
-                <p>На дне рассыпан <b>белый тальк</b>. <br>
-                Нацарапана записка: <i>"Частота = (Код сейфа * 2) + 58"</i>.<br>
-                Теперь вам нужен Терминал Охраны, чтобы понять, кто входил.</p>`;
+                <p class="highlight">[УЛИКИ ИЗ СЕЙФА]:</p>
+                <p>Внутри пусто. Однако на дне виден слой <b>белого порошка</b>. <br>
+                Также обнаружена зацепка: квитанция с <b>Почты</b>, выписанная сегодня утром. <br><br>
+                Возьмите образец порошка и идите в ЛАБОРАТОРИЮ.</p>`;
             document.getElementById('nav-safe').disabled = true;
-            document.getElementById('nav-term').classList.remove('hidden');
-            showModule('terminal-ui');
-            renderClues();
+            document.getElementById('nav-lab').classList.remove('hidden');
+            document.getElementById('nav-post').classList.remove('hidden');
+            showModule('lab-ui');
         } else {
-            alert("Код не подходит. Ищите подсказку в досье.");
+            alert("Код не подходит. Изучите досье сотрудников.");
         }
     }
 
-    // ТЕРМИНАЛ
-    function checkTerminal() {
-        const val = document.getElementById('term-pass').value;
-        if(val === "412") {
-            document.getElementById('display').innerHTML = `
-                <p class="highlight">[ЛОГИ ВОССТАНОВЛЕНЫ]</p>
-                <p>14:00 — Курьер доставил пакет.<br>
-                14:02 — Камеры отключены внешним сигналом.<br>
-                14:05 — Эли Рафаэль покинул здание с тяжелым кейсом.<br>
-                <b>Внимание:</b> Перехватите его переговоры на радио!</p>`;
-            document.getElementById('nav-radio').classList.remove('hidden');
-            showModule('radio-ui');
-            state.clues.add("Эли вышел в 14:05");
+    // ЛАБОРАТОРИЯ
+    function labAction(type) {
+        const res = document.getElementById('lab-res');
+        if(type === 'ph') res.innerHTML = "Результат: Нейтрально. Это не яд.";
+        if(type === 'uv') res.innerHTML = "Результат: Обнаружены микро-частицы серого пигмента.";
+        if(type === 'burn') {
+            res.innerHTML = "Результат: Характерный запах. Это <b style='color:var(--cyan)'>МАГНЕЗИЯ (ТАЛЬК)</b>. Используется фокусниками для ловкости рук.";
+            state.clues.add("Порошок = Тальк фокусника");
+            document.getElementById('nav-cafe').classList.remove('hidden');
             renderClues();
-        } else {
-            document.getElementById('term-hint').innerText = "ОШИБКА: ID не найден. (Подсказка: используйте жетон Алона)";
-        }
-    }
-
-    // РАДИО (Частота: 412 * 2 + 58 = 882)
-    function tune(v) {
-        document.getElementById('freq-val').innerText = parseFloat(v).toFixed(1) + " MHz";
-        const out = document.getElementById('radio-output');
-        if(v == 882.0) {
-            out.innerHTML = "<span style='color:var(--signal)'>ГОЛОС: '...все готово. Камни закрашены серым лаком и пришиты к пиджаку как пуговицы. Встречаемся в аэропорту.'</span>";
-            state.clues.add("Секрет пуговиц-алмазов");
-            document.getElementById('nav-workshop').classList.remove('hidden');
-            renderClues();
-        } else {
-            out.innerText = "Шум эфира...";
         }
     }
 
     // ЛОКАЦИИ
-    function visit(id) {
-        if(id === 'workshop') {
-            document.getElementById('display').innerHTML = `<h3>СКЛАД ЭЛИ</h3><p>Вы нашли банку матового лака и пиджак, с которого срезаны пуговицы. Теперь все сходится. Скорее в аэропорт!</p>`;
+    function goTo(loc) {
+        const d = document.getElementById('display');
+        if(loc === 'cafe') {
+            d.innerHTML = `<h3>КАФЕ "БИРЖА"</h3><p>Официант подтвердил: Эли и Марк сидели здесь утром. Марк передал Эли серую куртку, а Эли посыпал руки каким-то порошком.</p>`;
+            state.clues.add("Встреча Эли и Марка");
+            document.getElementById('nav-workshop').classList.remove('hidden');
+        }
+        if(loc === 'post') {
+            d.innerHTML = `<h3>ПОЧТОВЫЙ ТЕРМИНАЛ</h3><p>Найден дубликат накладной. Ицхак отправил Марку 'набор тяжелых металлических пуговиц'.</p>`;
+            state.clues.add("Посылка с пуговицами");
+        }
+        if(loc === 'workshop') {
+            d.innerHTML = `<h3>МАСТЕРСКАЯ ЭЛИ</h3><p>В мусоре найдена банка <b>серого матового лака</b>. На столе — чертеж пуговицы, внутри которой можно спрятать камень. <br><br><b>ТЕПЕРЬ ВСЕ ЯСНО:</b> Алмазы покрыли лаком и пришили к куртке курьера!</p>`;
+            state.clues.add("Секрет: Камни под лаком");
             document.getElementById('nav-airport').classList.remove('hidden');
         }
-        if(id === 'airport') {
-            const who = prompt("КТО ВОР?");
-            const how = prompt("КАК СПРЯТАНЫ АЛМАЗЫ?");
-            if(who.toLowerCase().includes("эли") && how.toLowerCase().includes("пуговицы")) {
-                alert("ПОЗДРАВЛЯЕМ! Вы раскрыли дело за " + (60 - Math.floor(state.time/60)) + " минут!");
+        if(loc === 'airport') {
+            const criminal = prompt("КТО ВОР?");
+            const hiding = prompt("ГДЕ АЛМАЗЫ? (Одно слово)");
+            if(criminal.toLowerCase().includes("эли") && hiding.toLowerCase().includes("пуговицы")) {
+                alert("БРАВО! Вы перехватили Эли в аэропорту. Алмазы были на его куртке под видом обычных пуговиц. Дело закрыто!");
             } else {
-                alert("ОШИБКА! Преступник скрылся.");
+                alert("ПРОВАЛ. Преступник покинул страну. Вы упустили его.");
             }
             location.reload();
         }
+        renderClues();
     }
 
     function showModule(id) {
@@ -235,17 +217,16 @@
     }
 
     function renderClues() {
-        const cList = document.getElementById('clues-list');
-        cList.innerHTML = "";
+        const list = document.getElementById('clues-list');
+        list.innerHTML = "";
         state.clues.forEach(c => {
-            const s = document.createElement('span');
-            s.className = "clue-tag";
-            s.innerText = c;
-            cList.appendChild(s);
+            const span = document.createElement('span');
+            span.className = "clue-tag";
+            span.innerText = c;
+            list.appendChild(span);
         });
     }
 
-    // Таймер
     setInterval(() => {
         state.time--;
         const m = Math.floor(state.time/60);
